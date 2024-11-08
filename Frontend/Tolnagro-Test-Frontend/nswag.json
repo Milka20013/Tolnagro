@@ -1,0 +1,17 @@
+{
+  "runtime": "NetCore31",
+  "documentGenerator": {
+    "fromSwagger": {
+      "url": "https://localhost:7252/swagger/v1/swagger.json",
+      "output": "GeneratedApiClient.cs"
+    }
+  },
+  "codeGenerators": {
+    "openApiToCSharpClient": {
+      "className": "ApiClient",
+      "namespace": "Tolnagro.Generated",
+      "output": "Generated/GeneratedApiClient.cs",
+      "generateOptionalParameters": true
+    }
+  }
+}
