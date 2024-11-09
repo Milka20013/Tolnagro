@@ -30,5 +30,16 @@ namespace Tolnagro_Test_Backend.Services.CustomerService
         {
             await _customerRepository.DeleteCustomer(customerId);
         }
+
+        public async Task AddAddress(string customerId, Address address)
+        {
+            var customer = await _customerRepository.GetCustomerById(customerId);
+            if (customer == null)
+            {
+                throw new Exception($"Customer with id {customerId} was not found");
+            }
+            customer.Addresses.Add(address);
+            await _customerRepository.UpdateCustomer(customer);
+        }
     }
 }

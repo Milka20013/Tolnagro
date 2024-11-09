@@ -14,14 +14,14 @@ namespace Tolnagro_Test_Frontend.APIGeneration
 
             var settings = new CSharpClientGeneratorSettings
             {
-                ClassName = "GeneratedAPIs",
+                ClassName = "GeneratedAPI",
                 CSharpGeneratorSettings = { Namespace = "Tolnagro_Test_Backend.API" }
             };
 
             var generator = new CSharpClientGenerator(document, settings);
             var code = generator.GenerateFile();
 
-            File.WriteAllText("Generated/GeneratedAPIs.cs", code);
+            File.WriteAllText("APIGeneration/Generated/GeneratedAPI.cs", code);
         }
     }
 }

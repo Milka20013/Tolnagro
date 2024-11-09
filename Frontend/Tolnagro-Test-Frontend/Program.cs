@@ -1,6 +1,6 @@
+using Tolnagro_Test_Backend.API;
 using Tolnagro_Test_Frontend.APIGeneration;
 using Tolnagro_Test_Frontend.Components;
-
 namespace Tolnagro_Test_Frontend
 {
     public class Program
@@ -14,11 +14,9 @@ namespace Tolnagro_Test_Frontend
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            // Set up HttpClient and register ApiClient
             var httpClient = new HttpClient() { BaseAddress = new Uri(backendURL) };
-
-
-            builder.Services.AddScoped(sp => httpClient);
+            var generatedAPI = new GeneratedAPI(backendURL, httpClient);
+            builder.Services.AddScoped(sp => generatedAPI);
 
 
             var app = builder.Build();

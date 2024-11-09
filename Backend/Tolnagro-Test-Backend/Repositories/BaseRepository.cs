@@ -15,6 +15,12 @@ namespace Tolnagro_Test_Backend.Repositories
             _collection = databaseService.Database.GetCollection<T>(CollectionName);
         }
 
+        protected async Task<T> GetById(string id)
+        {
+            var cursor = await _collection.FindAsync(x => x.Id == id);
+            return await cursor.FirstOrDefaultAsync();
+        }
+
         protected async Task<List<T>> GetAll()
         {
             var cursor = await _collection.FindAsync(x => true);

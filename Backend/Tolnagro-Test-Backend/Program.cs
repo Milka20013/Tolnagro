@@ -1,5 +1,6 @@
 
 using Tolnagro_Test_Backend.Database;
+using Tolnagro_Test_Backend.HostedServices;
 using Tolnagro_Test_Backend.Repositories.CustomerRepository;
 using Tolnagro_Test_Backend.Services.CustomerService;
 
@@ -19,6 +20,7 @@ namespace Tolnagro_Test_Backend
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
 
+            builder.Services.AddHostedService<HistoryHostedService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

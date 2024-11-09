@@ -9,6 +9,10 @@ namespace Tolnagro_Test_Backend.Repositories.CustomerRepository
         {
         }
 
+        public async Task<Customer> GetCustomerById(string id)
+        {
+            return await GetById(id);
+        }
         public async Task<List<Customer>> GetAllCustomers()
         {
             return await GetAll();

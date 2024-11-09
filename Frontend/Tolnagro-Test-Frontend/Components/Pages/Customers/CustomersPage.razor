@@ -1,0 +1,41 @@
+﻿@page "/customers"
+@attribute [StreamRendering]
+@inject GeneratedAPI apiClient
+
+<div class="customer-page">
+    <PageTitle>Ügyfelek</PageTitle>
+
+    <h1>Ügyfelek</h1>
+
+    @if (loading)
+    {
+        <p><em>Töltés...</em></p>
+    }
+    else
+    {
+        <div class="card-container">
+            @if (customers != null)
+            {
+                foreach (var customer in customers)
+                {
+                    <CustomerCard Content="@customer.Name"></CustomerCard>
+                }
+            }
+            <CustomerCard Content="Ügyfél hozzáadása" CardWidth="75%" BgColor="#81F787" TextColor="purple"></CustomerCard>
+            <PopupForm></PopupForm>
+        </div>
+    }
+
+</div>
+
+@code {
+    public bool loading = true;
+    public List<Customer>? customers;
+    protected override async Task OnInitializedAsync()
+    {
+        var customers = await apiClient.GetAllCustomersAsync();
+        this.customers = customers.ToList();
+        loading = false;
+    }
+
+}

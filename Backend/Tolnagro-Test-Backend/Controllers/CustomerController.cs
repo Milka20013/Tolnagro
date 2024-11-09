@@ -23,23 +23,30 @@ namespace Tolnagro_Test_Backend.Controllers
         }
 
         [HttpPost(Name = nameof(CreateCustomer))]
-        public async Task<ActionResult<List<Customer>>> CreateCustomer(Customer customer)
+        public async Task<ActionResult<Customer>> CreateCustomer(Customer customer)
         {
             var result = await _customerService.CreateCustomer(customer);
             return Ok(result);
         }
 
         [HttpDelete(Name = nameof(DeleteCustomer))]
-        public async Task<ActionResult<List<Customer>>> DeleteCustomer(string id)
+        public async Task<ActionResult> DeleteCustomer(string id)
         {
             await _customerService.DeleteCustomer(id);
             return Ok();
         }
 
         [HttpPatch(Name = nameof(UpdateCustomer))]
-        public async Task<ActionResult<List<Customer>>> UpdateCustomer(Customer customer)
+        public async Task<ActionResult> UpdateCustomer(Customer customer)
         {
             await _customerService.UpdateCustomer(customer);
+            return Ok();
+        }
+
+        [HttpPatch("add-address", Name = nameof(AddAddress))]
+        public async Task<ActionResult> AddAddress(string customerId, Address address)
+        {
+            await _customerService.AddAddress(customerId, address);
             return Ok();
         }
     }
