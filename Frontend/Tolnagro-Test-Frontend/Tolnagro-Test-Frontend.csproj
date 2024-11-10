@@ -10,6 +10,7 @@
 	
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
+    <PackageReference Include="MudBlazor" Version="7.15.0" />
     <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.1.0" />
     <PackageReference Include="NSwag.Core" Version="14.1.0" />
     <PackageReference Include="NSwag.MSBuild" Version="14.1.0">

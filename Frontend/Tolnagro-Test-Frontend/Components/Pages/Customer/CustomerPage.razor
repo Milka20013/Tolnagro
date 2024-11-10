@@ -1,0 +1,28 @@
+﻿@page "/customer/{CustomerId?}"
+@inject GeneratedAPI apiService
+
+<h3>CustomerPage</h3>
+@if(Customer == null)
+{
+    <div>Töltés...</div>
+}
+else
+{
+    <div>@Customer.Name</div>
+}
+
+@code {
+    [Parameter]
+    public string? CustomerId { get; set; }
+
+    public Customer? Customer { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (CustomerId == null)
+        {
+            throw new Exception("CustomerId can't be null");
+        }
+        Customer = await apiService.GetCustomerByIdAsync(CustomerId);
+    }
+}

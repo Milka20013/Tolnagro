@@ -8,6 +8,7 @@ namespace Tolnagro_Test_Backend.Services.CustomerService
         Task<Customer> CreateCustomer(Customer customer);
         Task DeleteCustomer(string customerId);
         Task<List<Customer>> GetAllCustomers();
+        Task<Customer> GetCustomerById(string id);
         Task UpdateCustomer(Customer customer);
     }
 }

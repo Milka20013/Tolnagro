@@ -1,6 +1,10 @@
 ﻿@page "/customers"
 @attribute [StreamRendering]
+
 @inject GeneratedAPI apiClient
+@inject IDialogService dialogService
+@inject CustomerService customerService
+@inject NavigationManager navigationManager
 
 <div class="customer-page">
     <PageTitle>Ügyfelek</PageTitle>
@@ -18,11 +22,10 @@
             {
                 foreach (var customer in customers)
                 {
-                    <CustomerCard Content="@customer.Name"></CustomerCard>
+                    <CustomerCard Content="@customer.Name" @onclick="() => NavigateToCustomerPage(customer.Id)"></CustomerCard>
                 }
             }
-            <CustomerCard Content="Ügyfél hozzáadása" CardWidth="75%" BgColor="#81F787" TextColor="purple"></CustomerCard>
-            <PopupForm></PopupForm>
+            <CustomerCard Content="Ügyfél hozzáadása" CardWidth="75%" BgColor="#81F787" TextColor="purple" @onclick="OpenDialogAsync"/>
         </div>
     }
 
@@ -30,12 +33,31 @@
 
 @code {
     public bool loading = true;
-    public List<Customer>? customers;
+    public List<Customer> customers = new();
     protected override async Task OnInitializedAsync()
     {
         var customers = await apiClient.GetAllCustomersAsync();
         this.customers = customers.ToList();
         loading = false;
+        customerService.OnCustomerAdded += OnCustomerCreated;
+    }
+
+    private Task OpenDialogAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        return dialogService.ShowAsync<CustomerPopup>("Simple Dialog", options);
+    }
+
+    public void OnCustomerCreated(Customer customer)
+    {
+        customers.Add(customer);
+        StateHasChanged();
+    }
+
+    public void NavigateToCustomerPage(string customerId)
+    {
+        navigationManager.NavigateTo("customer/" + customerId);
     }
 
 }

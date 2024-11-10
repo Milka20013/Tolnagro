@@ -1,0 +1,33 @@
+﻿@inject GeneratedAPI apiService
+@inject CustomerService customerService
+
+<MudDialog>
+    <TitleContent>
+        Ügyfél hozzáadás
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="Name" Label="Ügyfél neve" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Mégsem</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Hozzáadás</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    public string Name { get; set; }
+
+
+    private async void Submit()
+    {
+        var customer = await apiService.CreateCustomerAsync(new() { Name = Name });
+        customerService.CallOnCustomerAdded(customer);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
+

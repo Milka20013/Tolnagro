@@ -17,6 +17,11 @@ namespace Tolnagro_Test_Backend.Services.CustomerService
             return await _customerRepository.GetAllCustomers();
         }
 
+        public async Task<Customer> GetCustomerById(string id)
+        {
+            return await _customerRepository.GetCustomerById(id);
+        }
+
         public async Task<Customer> CreateCustomer(Customer customer)
         {
             return await _customerRepository.CreateCustomer(customer);

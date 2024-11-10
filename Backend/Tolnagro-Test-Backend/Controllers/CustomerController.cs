@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Tolnagro_Test_Backend.DTOs;
 using Tolnagro_Test_Backend.Models;
 using Tolnagro_Test_Backend.Services.CustomerService;
 
@@ -22,10 +23,17 @@ namespace Tolnagro_Test_Backend.Controllers
             return Ok(result);
         }
 
-        [HttpPost(Name = nameof(CreateCustomer))]
-        public async Task<ActionResult<Customer>> CreateCustomer(Customer customer)
+        [HttpGet("by-id", Name = nameof(GetCustomerById))]
+        public async Task<ActionResult<Customer>> GetCustomerById(string id)
         {
-            var result = await _customerService.CreateCustomer(customer);
+            var result = await _customerService.GetCustomerById(id);
+            return Ok(result);
+        }
+
+        [HttpPost(Name = nameof(CreateCustomer))]
+        public async Task<ActionResult<Customer>> CreateCustomer(AddCustomerDTO customerDTO)
+        {
+            var result = await _customerService.CreateCustomer(new Customer() { Name = customerDTO.Name });
             return Ok(result);
         }
 

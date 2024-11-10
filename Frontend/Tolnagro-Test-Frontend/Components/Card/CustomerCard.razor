@@ -1,4 +1,4 @@
-﻿<div class="card" style="background-color:@BgColor; width:@CardWidth">
+﻿<div class="card" style="background-color:@BgColor; width:@CardWidth" onclick="@OnClick">
     <div class="card-content" style="color:@TextColor">@Content</div>
 </div>
 
@@ -11,4 +11,7 @@
     public string TextColor { get; set; } = "white";
     [Parameter]
     public string CardWidth { get; set; } = "100%";
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
 }
