@@ -22,10 +22,10 @@
             {
                 foreach (var customer in customers)
                 {
-                    <CustomerCard Content="@customer.Name" @onclick="() => NavigateToCustomerPage(customer.Id)"></CustomerCard>
+                    <CustomerCard StatusIcon="@GetStatusIcon(customer)" Content="@customer.Name" @onclick="() => NavigateToCustomerPage(customer.Id)"></CustomerCard>
                 }
             }
-            <CustomerCard Content="Ügyfél hozzáadása" CardWidth="75%" BgColor="#81F787" TextColor="purple" @onclick="OpenDialogAsync"/>
+            <MudButton OnClick="OpenAddCustomerDialogAsync" Color="Color.Primary" Variant="Variant.Filled">Ügyfél hozzáadása</MudButton>
         </div>
     }
 
@@ -42,11 +42,23 @@
         customerService.OnCustomerAdded += OnCustomerCreated;
     }
 
-    private Task OpenDialogAsync()
+    private string GetStatusIcon(Customer customer)
+    {
+        if (customer.IsHistoryChecked)
+        {
+            return Icons.Material.Filled.CheckCircle;
+        }
+        else
+        {
+            return Icons.Material.Filled.Warning;
+        }
+    }
+
+    private Task OpenAddCustomerDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
 
-        return dialogService.ShowAsync<CustomerPopup>("Simple Dialog", options);
+        return dialogService.ShowAsync<CustomerAddPopup>("Simple Dialog", options);
     }
 
     public void OnCustomerCreated(Customer customer)

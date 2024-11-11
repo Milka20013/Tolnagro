@@ -1,6 +1,8 @@
 
+using System.Text.Json.Serialization;
 using Tolnagro_Test_Backend.Database;
 using Tolnagro_Test_Backend.HostedServices;
+using Tolnagro_Test_Backend.Repositories.CustomerHistoryRepository;
 using Tolnagro_Test_Backend.Repositories.CustomerRepository;
 using Tolnagro_Test_Backend.Services.CustomerService;
 
@@ -14,11 +16,13 @@ namespace Tolnagro_Test_Backend
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 
             builder.Services.AddScoped<IDatabaseService, DatabaseService>();
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<ICustomerHistoryRepository, CustomerHistoryRepository>();
 
             builder.Services.AddHostedService<HistoryHostedService>();
 

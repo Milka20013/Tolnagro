@@ -15,7 +15,8 @@ namespace Tolnagro_Test_Frontend.APIGeneration
             var settings = new CSharpClientGeneratorSettings
             {
                 ClassName = "GeneratedAPI",
-                CSharpGeneratorSettings = { Namespace = "Tolnagro_Test_Backend.API" }
+                CSharpGeneratorSettings = { Namespace = "Tolnagro_Test_Backend.API", ArrayType = "System.Collections.Generic.List" }
+
             };
 
             var generator = new CSharpClientGenerator(document, settings);

@@ -1,16 +1,14 @@
-﻿<div class="card" style="background-color:@BgColor; width:@CardWidth" onclick="@OnClick">
-    <div class="card-content" style="color:@TextColor">@Content</div>
+﻿<div class="card" onclick="@OnClick">
+    <div class="card-content">@Content</div>
+    <MudIcon Style="status-icon" Icon="@StatusIcon"></MudIcon>
 </div>
 
 @code {
     [Parameter]
     public string? Content { get; set; }
-    [Parameter]
-    public string BgColor { get; set; } = "#4A4A4A";
-    [Parameter]
-    public string TextColor { get; set; } = "white";
-    [Parameter]
-    public string CardWidth { get; set; } = "100%";
+
+    [Parameter, EditorRequired]
+    public string StatusIcon { get; set; }
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnClick { get; set; }

@@ -18,6 +18,11 @@ namespace Tolnagro_Test_Backend.Repositories.CustomerRepository
             return await GetAll();
         }
 
+        public async Task<List<Customer>> GetAllCustomersToHistoryCheck()
+        {
+            return await Get(x => !x.IsHistoryChecked);
+        }
+
         public async Task<Customer> CreateCustomer(Customer customer)
         {
             return await Create(customer);

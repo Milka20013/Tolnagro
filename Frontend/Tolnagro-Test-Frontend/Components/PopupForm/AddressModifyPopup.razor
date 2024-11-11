@@ -1,0 +1,41 @@
+﻿@inject GeneratedAPI apiService
+@inject CustomerService customerService
+
+<MudDialog>
+    <TitleContent>
+        Cím módosítása
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="Address.Country" Label="Ország" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
+        <MudTextField @bind-Value="Address.City" Label="Város" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
+        <MudTextField @bind-Value="Address.PostalCode" Label="Irányítószám" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
+        <MudTextField @bind-Value="Address.Street" Label="Utca" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
+        <MudTextField @bind-Value="Address.HouseNumber" Label="Házszám" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
+        <AddressSelector AddressTypeProperty="Address.AddressType" />
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Mégsem</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Módoítás</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    [Parameter, EditorRequired]
+    public Address Address { get; set; }
+
+    [Parameter]
+    public EventCallback<Address> OnAddressModified { get; set; }
+
+    private async void Submit()
+    {
+        await OnAddressModified.InvokeAsync(Address);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
+

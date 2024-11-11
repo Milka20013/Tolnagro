@@ -1,0 +1,50 @@
+﻿<MudSelect class="mud-select-table"
+           T="string"
+           @bind-Value="option"
+           @bind-SelectedValues="Options"
+           Margin="@(_margin==true?Margin.Dense:Margin.None)"
+           Dense="@_dense"
+           Label="Cím típus">
+
+    @foreach (var type in Enum.GetValues(typeof(AddressType)))
+    {
+        <MudSelectItem Value="@type.ToString()" />
+    }
+</MudSelect>
+
+@code {
+    bool _margin = true;
+    bool _dense = true;
+
+    private string option { get; set; }
+
+    private IEnumerable<string> options;
+    public IEnumerable<string> Options
+    {
+        get { return options; }
+        set
+        {
+            options = value;
+            if (value.Count() > 0)
+            {
+                if (AddressTypeProperty.ToString() != value.First())
+                {
+                    AddressTypeProperty = (AddressType)Enum.Parse(typeof(AddressType), value.First(), true);
+                    AddressTypePropertyChanged.InvokeAsync(AddressTypeProperty);
+                }
+            }
+        }
+    }
+
+    [Parameter]
+    public AddressType AddressTypeProperty { get; set; }
+
+    [Parameter]
+    public EventCallback<AddressType> AddressTypePropertyChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        option = AddressTypeProperty.ToString();
+        Options = new HashSet<string>() { option };
+    }
+}

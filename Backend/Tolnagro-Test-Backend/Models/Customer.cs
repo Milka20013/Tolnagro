@@ -3,6 +3,7 @@
     public class Customer : RootModel
     {
         public string Name { get; set; }
-        public List<Address> Addresses { get; set; }
+        public List<Address>? Addresses { get; set; }
+        public bool IsHistoryChecked { get; set; }
     }
 }

@@ -1,0 +1,65 @@
+﻿@inject IDialogService dialogService
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Address.PostalCode, @Address.City</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Default" OnClick="OnEditAsync"/>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText>@Address.Country</MudText>
+        <MudText>@Address.Street, @Address.HouseNumber</MudText>
+        <MudText Typo="Typo.body2">@AddressTypeAsString(@Address.AddressType) address</MudText>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Color="Color.Secondary" OnClick="DeleteAddress">Törlés</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter, EditorRequired]
+    public Address Address { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<string> OnDelete { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<Address> OnEdit { get; set; }
+
+    public string AddressTypeAsString(AddressType addressType)
+    {
+        // the enum name is in english
+        // workaround to translation, should be done differently
+        /*return addressType switch
+            {
+            AddressType.Shipping => "Szállítási",
+            AddressType.Billing => "Számlázási",
+            _ => "Egyéb",
+        };*/
+        return addressType.ToString();
+
+    }
+
+    public async void DeleteAddress()
+    {
+        await OnDelete.InvokeAsync(Address.Id);
+    }
+
+    public Task OnEditAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        var dialogParameters = new DialogParameters<AddressModifyPopup>();
+        dialogParameters.Add(p => p.OnAddressModified, new EventCallbackFactory().Create<Address>(this, OnAddressModified));
+        dialogParameters.Add(p => p.Address, Address);
+        return dialogService.ShowAsync<AddressModifyPopup>("Simple Dialog", dialogParameters, options);
+    }
+
+    public async void OnAddressModified(Address address)
+    {
+        await OnEdit.InvokeAsync(address);
+    }
+}

@@ -51,10 +51,24 @@ namespace Tolnagro_Test_Backend.Controllers
             return Ok();
         }
 
-        [HttpPatch("add-address", Name = nameof(AddAddress))]
-        public async Task<ActionResult> AddAddress(string customerId, Address address)
+        [HttpPost("add-address", Name = nameof(AddAddress))]
+        public async Task<ActionResult<Address>> AddAddress(string customerId, Address address)
         {
-            await _customerService.AddAddress(customerId, address);
+            var result = await _customerService.AddAddress(customerId, address);
+            return Ok(result);
+        }
+
+        [HttpPatch("update-address", Name = nameof(UpdateAddress))]
+        public async Task<ActionResult> UpdateAddress(string customerId, Address address)
+        {
+            await _customerService.UpdateAddress(customerId, address);
+            return Ok();
+        }
+
+        [HttpDelete("delete-address", Name = nameof(DeleteAddress))]
+        public async Task<ActionResult> DeleteAddress(string customerId, string addressId)
+        {
+            await _customerService.DeleteAddress(customerId, addressId);
             return Ok();
         }
     }

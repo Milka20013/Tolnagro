@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Linq.Expressions;
 using Tolnagro_Test_Backend.Database;
 using Tolnagro_Test_Backend.Models;
 
@@ -19,6 +20,12 @@ namespace Tolnagro_Test_Backend.Repositories
         {
             var cursor = await _collection.FindAsync(x => x.Id == id);
             return await cursor.FirstOrDefaultAsync();
+        }
+
+        protected async Task<List<T>> Get(Expression<Func<T, bool>> expression)
+        {
+            var cursor = await _collection.FindAsync(expression);
+            return await cursor.ToListAsync();
         }
 
         protected async Task<List<T>> GetAll()

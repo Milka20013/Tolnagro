@@ -1,15 +1,36 @@
 ﻿@page "/customer/{CustomerId?}"
-@inject GeneratedAPI apiService
+@inject GeneratedAPI apiClient
+@inject CustomerService customerService
+@inject IDialogService dialogService
+@inject NavigationManager navigationManager
 
-<h3>CustomerPage</h3>
-@if(Customer == null)
-{
-    <div>Töltés...</div>
-}
-else
-{
-    <div>@Customer.Name</div>
-}
+<div class="page-div">
+    <h3>Ügyfél</h3>
+    @if(Customer == null)
+    {
+        <div>Töltés...</div>
+    }
+    else
+    {
+        <div class="customer-div">
+            <div class="customer-name">@Customer.Name</div>
+            <MudIcon Class="icon" Icon="@GetStatusIcon()"></MudIcon>
+            <MudIconButton Class="icon" Icon="@Icons.Material.Filled.Edit" OnClick="OpenCustomerModifyDialogAsync"></MudIconButton>
+        </div>
+        @if(Customer.Addresses != null)
+        {
+            <div class="address-container">
+            @foreach (var address in Customer.Addresses)
+            {
+                    <AddressCard Address="address" OnDelete="DeleteAddress" OnEdit="OnAddressModified" />
+            }
+            </div>
+        }
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddAddressDialogAsync">Cím hozzáadása</MudButton>
+        <MudButton Class="mt-auto mb-1" Variant="Variant.Filled" Color="Color.Secondary" OnClick="DeleteCustomer">Ügyfél törlése</MudButton>
+    }
+
+</div>
 
 @code {
     [Parameter]
@@ -23,6 +44,84 @@ else
         {
             throw new Exception("CustomerId can't be null");
         }
-        Customer = await apiService.GetCustomerByIdAsync(CustomerId);
+        Customer = await apiClient.GetCustomerByIdAsync(CustomerId);
+        customerService.OnCustomerChanged += OnCustomerChanged;
+    }
+
+    private string GetStatusIcon()
+    {
+        if (Customer.IsHistoryChecked)
+        {
+            return Icons.Material.Filled.CheckCircle;
+        }
+        else
+        {
+            return Icons.Material.Filled.Warning;
+        }
+    }
+
+    private Task OpenCustomerModifyDialogAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        var dialogParameters = new DialogParameters<CustomerModifyPopup>();
+        dialogParameters.Add(p => p.Customer, Customer);
+
+        return dialogService.ShowAsync<CustomerModifyPopup>("Simple Dialog",dialogParameters,options);
+    }
+
+    public void OnCustomerChanged(Customer customer)
+    {
+        Customer = customer;
+        customer.IsHistoryChecked = false;
+        StateHasChanged();
+    }
+
+    public async void DeleteCustomer()
+    {
+        await apiClient.DeleteCustomerAsync(Customer!.Id);
+        navigationManager.NavigateTo("customers");
+    }
+
+    public async void DeleteAddress(string addressId)
+    {
+        await apiClient.DeleteAddressAsync(Customer!.Id, addressId);
+        var addressToRemove = Customer.Addresses.First(x=>x.Id == addressId);
+        Customer.Addresses.Remove(addressToRemove);
+        Customer.IsHistoryChecked = false;
+        StateHasChanged();
+    }
+
+    public async void OnAddressAdded(Address address)
+    {
+        var addedAddress = await apiClient.AddAddressAsync(Customer!.Id, address);
+        Customer.Addresses.Add(addedAddress);
+        Customer.IsHistoryChecked = false;
+        StateHasChanged();
+    }
+
+    public async void OnAddressModified(Address address)
+    {
+        await apiClient.UpdateAddressAsync(Customer!.Id, address);
+        var addressToRemove = Customer.Addresses.First(x => x.Id == address.Id);
+        for (int i = 0; i < Customer.Addresses.Count; i++)
+        {
+            if (Customer.Addresses[i].Id == address.Id)
+            {
+                Customer.Addresses[i] = address;
+            }
+        }
+        Customer.IsHistoryChecked = false;
+        StateHasChanged();
+    }
+
+    public Task OpenAddAddressDialogAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        var dialogParameters = new DialogParameters<AddressAddPopup>();
+        dialogParameters.Add(p => p.OnAddressAdded, new EventCallbackFactory().Create<Address>(this, OnAddressAdded));
+
+        return dialogService.ShowAsync<AddressAddPopup>("Simple Dialog", dialogParameters, options);
     }
 }
