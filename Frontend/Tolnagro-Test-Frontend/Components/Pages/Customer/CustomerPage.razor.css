@@ -5,6 +5,7 @@
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
+    gap:5px;
 }
 .customer-div{
     width: 40%;

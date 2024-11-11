@@ -95,6 +95,10 @@
     public async void OnAddressAdded(Address address)
     {
         var addedAddress = await apiClient.AddAddressAsync(Customer!.Id, address);
+        if (Customer.Addresses == null)
+        {
+            Customer.Addresses = new();
+        }
         Customer.Addresses.Add(addedAddress);
         Customer.IsHistoryChecked = false;
         StateHasChanged();

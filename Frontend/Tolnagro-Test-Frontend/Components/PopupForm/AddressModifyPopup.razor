@@ -11,7 +11,7 @@
         <MudTextField @bind-Value="Address.PostalCode" Label="Irányítószám" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
         <MudTextField @bind-Value="Address.Street" Label="Utca" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
         <MudTextField @bind-Value="Address.HouseNumber" Label="Házszám" Variant="Variant.Text" Style="width: 40vh"></MudTextField>
-        <AddressSelector AddressTypeProperty="Address.AddressType" />
+        <AddressSelector AddressTypeProperty="Address.AddressType" AddressTypePropertyChanged="OnAddressTypeChanged" />
 
     </DialogContent>
     <DialogActions>
@@ -30,10 +30,21 @@
     [Parameter]
     public EventCallback<Address> OnAddressModified { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine(Address.AddressType);
+    }
+
     private async void Submit()
     {
+        Console.WriteLine(Address.AddressType);
         await OnAddressModified.InvokeAsync(Address);
         MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void OnAddressTypeChanged(AddressType addressType)
+    {
+        Address.AddressType = addressType;
     }
 
     private void Cancel() => MudDialog.Cancel();
